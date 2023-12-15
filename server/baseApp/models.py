@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 import requests
 from xml.etree import ElementTree as ET
 import pdftotext
+from uuid import uuid4 as uuid
 # Create your models here.
 
 
@@ -15,6 +16,7 @@ class paper(models.Model):
             verbose_name = "paper"
             verbose_name_plural = "papers"
 
+    id = models.UUIDField(primary_key = True,default = uuid, editable=False)
     titre = models.CharField("titre", max_length=100, blank = True, null = True)
     resume = models.TextField("resume", blank = True)
     auteurs = ArrayField(models.CharField(max_length=100, blank = True, null = True), null = True, default = list, blank = True)
@@ -68,7 +70,7 @@ class paper(models.Model):
         file = ''
         super(paper, self).save(*args, **kwargs) 
         with open(self.file_pdf.path, "rb") as f:
-            pdf = pdftotext.PDF(f)
+            pdf = pdftotext.PDF(f, physical = True)
         
         for text in pdf:
             file = file + text
