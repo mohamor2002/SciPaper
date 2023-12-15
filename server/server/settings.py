@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "baseApp.apps.BaseappConfig",
+    "basicuserApp.apps.BasicuserappConfig",
     "rest_framework"
 ]
 
@@ -78,7 +79,7 @@ WSGI_APPLICATION = "server.wsgi.application"
 DATABASES = {
       'default': {
           'ENGINE': 'django.db.backends.postgresql',
-          'NAME': 'scipaper',
+          'NAME': 'sp',
           'USER': 'raouf',
           'PASSWORD': '123456r',
           'HOST': 'localhost',

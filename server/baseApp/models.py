@@ -4,6 +4,7 @@ import requests
 from xml.etree import ElementTree as ET
 import pdftotext
 from uuid import uuid4 as uuid
+import os
 # Create your models here.
 
 
@@ -15,9 +16,8 @@ class paper(models.Model):
             get_latest_by = "date_insertion"
             verbose_name = "paper"
             verbose_name_plural = "papers"
-
-    id = models.UUIDField(primary_key = True,default = uuid, editable=False)
     titre = models.CharField("titre", max_length=100, blank = True, null = True)
+    p_id = models.UUIDField(primary_key=True, default=uuid, editable=False)
     resume = models.TextField("resume", blank = True)
     auteurs = ArrayField(models.CharField(max_length=100, blank = True, null = True), null = True, default = list, blank = True)
     mots_cles = ArrayField(models.CharField(max_length=100, blank = True, null = True), null = True, default = list, blank = True)
@@ -27,8 +27,9 @@ class paper(models.Model):
     references = ArrayField(models.CharField(max_length=50, blank = True, null = True), null = True, default = list, blank = True)
     date_insertion = models.DateTimeField(auto_now_add=True, blank = True, null = True) 
 
-
-    def getMetaData(self):
+    def __str__(self):
+        return self.titre
+    def __getMetaData(self):
         headers = {
         'Content-Type': 'application/binary',
         }
@@ -39,7 +40,7 @@ class paper(models.Model):
 
 
     def save(self, *args, **kwargs):
-        r = self.getMetaData()
+        r = self.__getMetaData()
         root =  ET.fromstring(r.text)
         mots_cles = []
         auteurs = []
@@ -76,4 +77,9 @@ class paper(models.Model):
             file = file + text
         self.texte_integral = file
         super(paper, self).save(*args, **kwargs) 
+        
+        
+    def remove(self):
+        os.remove("../uploads/" + self.file_pdf.path)
+        super(paper, self).remove()
 
