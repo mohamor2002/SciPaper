@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "baseApp.apps.BaseappConfig",
-    "basicuserApp.apps.BasicuserappConfig",
+    "authentication.apps.AuthenticationConfig",
     "rest_framework"
 ]
 
