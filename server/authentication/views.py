@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate, login as djlogin, logout as djlogo
 from operator import itemgetter
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
+from custom_decorators import permission_required
 # Create your views here.
 def index(request):
     return HttpResponse("hello world")
@@ -66,11 +67,10 @@ def deleteAccount(request):
 
 
 @csrf_exempt
-# @login_required
-# @permission_required('authentication.delete_moderator', login_url = "/")
+@login_required
+@permission_required('authentication.delete_moderator',"admin",  login_url = "/")
 def deleteModerator(request):
-    group = Group.objects.get(name = 'admin')
-    if (request.method == 'DELETE' and group in request.user.groups):
+    if (request.method == 'DELETE'):
           username = itemgetter('username')(json.loads(request.body))
           mod = User.objects.get(username = username)
           mod.delete()
