@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "baseApp.apps.BaseappConfig",
     "authentication.apps.AuthenticationConfig",
-    "rest_framework"
+    'django_elasticsearch_dsl'
 ]
 
 MIDDLEWARE = [
@@ -129,10 +129,11 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'http://localhost:9200',
+        'http_auth': ('elastic', 'raouf')
+    }
 }
+
+

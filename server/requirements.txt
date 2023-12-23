@@ -1,0 +1,4 @@
+Django==4.2.7
+grobid_client==0.8.3
+pdftotext==2.2.2
+Requests==2.31.0

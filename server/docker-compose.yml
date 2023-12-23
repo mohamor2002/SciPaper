@@ -1,0 +1,14 @@
+version: '3' # Or your desired version
+
+services:
+  esearch:
+    container_name: search
+    image: elasticsearch:8.11.3
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=raouf
+      - verify_certs=false
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    mem_limit: "1g"
