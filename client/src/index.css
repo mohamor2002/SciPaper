@@ -1,3 +1,34 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@font-face {
+    font-family: 'Br Hendrix';
+    src: url('/fonts/BRHendrix-Regular.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Br Hendrix';
+    src: url('/fonts/BRHendrix-Light.otf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Br Hendrix';
+    src: url('/fonts/BRHendrix-Medium.otf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Br Hendrix';
+    src: url('/fonts/BRHendrix-Bold.otf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Br Hendrix';
+    src: url('/fonts/BRHendrix-SemiBold.otf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
