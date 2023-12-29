@@ -118,7 +118,7 @@ const HomePage = () => {
 
         </motion.div>
         <motion.div layout transition={{duration:1}} className={`relative md:w-[40%] md:h-auto h-[40%] bg-gradient-to-tr from-light-purple via-main-purple to-secondary-purple flex flex-col ${!isLogin?'md:justify-center md:pb-0 justify-end pb-10':'justify-center'}  items-center`}>
-            <motion.img initial="start" animate="end" variants={keyframes} transition={transition} src={isLogin?bg2:bg1} className='absolute h-full' alt="" />
+            <motion.img draggable={false} initial="start" animate="end" variants={keyframes} transition={transition} src={isLogin?bg2:bg1} className='absolute h-full' alt="" />
             <div className='z-10 flex flex-col items-center w-full space-y-6'>
                 <AnimatePresence exitBeforeEnter={false} mode="wait">
                     {
