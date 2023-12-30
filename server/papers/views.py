@@ -5,7 +5,6 @@ from .models import paper
 from custom_decorators import permission_required
 import json
 from elasticsearch_dsl import Search
-from django_elasticsearch_dsl_drf.utils import dict_to_obj
 
 
 @permission_required('baseApp.create_paper',"admin",  login_url = "/")
@@ -27,7 +26,7 @@ def create_document(request):
 
 
 @permission_required('baseApp.delete_paper', 'moderator', login_url='/')
-def remove_document(request):
+def delete_document(request):
     if(request.method == 'DELETE'):
         document_id = json.loads(request.body)['id']
         try:
@@ -85,7 +84,7 @@ def update_document(request):
     
     
 
-def filtre_documents(request):
+def filter_documents(request):
     if(request.method == 'GET'):
         search = Search(index=paperDocument._index._name)
         for key, values in request.GET.lists():
