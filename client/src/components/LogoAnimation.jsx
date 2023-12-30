@@ -7,8 +7,7 @@ const LogoAnimation = ({colors}) => {
   
   return (
     <motion.svg
-      height={75}
-      width={75}
+      
       id="Layer_1"
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
@@ -17,6 +16,7 @@ const LogoAnimation = ({colors}) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       exit={{opacity:0}}
+      className=' h-12 w-12 md:h-20 md:w-20'
     >
       <motion.polygon
         className="cls-1"
