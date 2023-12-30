@@ -73,29 +73,29 @@ const HomePage = () => {
                 <LogoAnimation colors={colorsMain}/>:
                 <LogoAnimation colors={colorsWhite}/>
             }
-            <p className={`${isLogin?'text-dark-blue':'text-white'} font-bold text-2xl duration-1000`}>SciPaper</p>
+            <p className={`${isLogin?'text-dark-blue':'text-white'} font-bold text-lg md:text-2xl duration-1000`}>SciPaper</p>
         </div>
         <motion.div layout transition={{duration:1}} className=' flex-1 flex flex-col items-center justify-between'>
             
             <div className={` ${!isLogin?'hidden md:flex h-[15%]':'flex h-[20%]'} `}></div>
-            <h1 className={`font-black text-dark-purple text-5xl md:text-6xl text-center ${!isLogin&&'mt-8 md:mt-0'}`}>{isLogin?'Login to Your Account':'Create Account'} </h1>
-            <p className=' text-[#414141] opacity-50 text-xl'>Login to use our service</p>
+            <h1 className={`font-black text-dark-purple text-4xl md:text-6xl text-center ${!isLogin&&'mt-8 md:mt-0'}`}>{isLogin?'Login to Your Account':'Create Account'} </h1>
+            <p className=' text-[#414141] opacity-50 text-lg md:text-xl'>Login to use our service</p>
             {
                 !isLogin&&
-                <div className=' w-[70%] h-[10%] bg-main-gray rounded-full flex items-center justify-between space-x-4 px-4'>
+                <div className=' w-[80%] md:w-[70%] h-[10%] bg-main-gray rounded-full flex items-center justify-between space-x-4 px-4'>
                 <PersonOutlinedIcon style={{color:'#352F44',fontSize:30}}/>
                 <input placeholder='Full Name' type="text" className=' text-lg font-medium bg-transparent outline-none flex-1' />
             </div>}
-            <div className=' w-[70%] h-[10%] bg-main-gray rounded-full flex items-center justify-between space-x-4 px-4'>
+            <div className='  w-[80%] md:w-[70%] h-[10%] bg-main-gray rounded-full flex items-center justify-between space-x-4 px-4'>
                 <MailOutlineOutlinedIcon style={{color:'#352F44',fontSize:30}}/>
                 <input placeholder='Email' type="email" className=' text-lg font-medium bg-transparent outline-none flex-1' />
 
             </div>
-            <div className=' w-[70%] h-[10%] bg-main-gray rounded-full flex items-center justify-between space-x-4 px-4'>
+            <div className='  w-[80%] md:w-[70%] h-[10%] bg-main-gray rounded-full flex items-center justify-between space-x-4 px-4'>
                 <LockOutlinedIcon style={{color:'#352F44',fontSize:30}}/>
                 <input placeholder='Password' type="password" className=' text-lg font-medium bg-transparent outline-none flex-1' />
             </div>
-            <div className='flex mt-2 w-[70%] justify-start font-semibold md:text-lg text-dark-purple'>
+            <div className='flex mt-2  w-[80%] md:w-[70%] justify-start font-semibold md:text-lg text-dark-purple'>
                 {
                     isLogin?
                     <Link className=' '>
@@ -107,7 +107,7 @@ const HomePage = () => {
                     </div>
                 }
             </div>
-            <button className='w-[33%] mb-2 h-16 bg-dark-purple rounded-full text-white font-bold text-xl'>
+            <button className=' w-1/2 md:w-[33%] mb-2 h-16 bg-dark-purple rounded-full text-white font-bold md:text-xl'>
                 <p>{isLogin?'Sign in':'Sign up'}</p>
             </button>
             <div className='flex justify-center items-center mb-4 space-x-4 text-[#696969] text-sm'>
@@ -122,7 +122,7 @@ const HomePage = () => {
             <div className='z-10 flex flex-col items-center w-full space-y-6'>
                 <AnimatePresence exitBeforeEnter={false} mode="wait">
                     {
-                        <motion.div key={currentTitle} initial="initial" animate="animate" exit="exit" variants={textVariants} transition={textTransition}  className={`font-black text-white text-4xl md:text-5xl`}>
+                        <motion.div key={currentTitle} initial="initial" animate="animate" exit="exit" variants={textVariants} transition={textTransition}  className={`font-black text-white text-3xl md:text-5xl`}>
                             <h2>
                                 {currentTitle}
                             </h2>
@@ -132,7 +132,7 @@ const HomePage = () => {
                 </AnimatePresence>
                 <AnimatePresence exitBeforeEnter={false} mode="wait">
                     {
-                        <motion.div key={currentText} initial="initial" animate="animate" exit="exit" variants={textVariants} transition={textTransition}  className=' text-white text-2xl px-[10%] h-20 text-center'>
+                        <motion.div key={currentText} initial="initial" animate="animate" exit="exit" variants={textVariants} transition={textTransition}  className=' text-white text-lg md:text-2xl px-[10%] h-20 text-center'>
                             <p>
                                 {currentText}
                             </p>
@@ -140,7 +140,7 @@ const HomePage = () => {
                         </motion.div>
                     }
                 </AnimatePresence>
-                <button onClick={(e)=>handleToggle(e)} className=' w-1/2 outline outline-2 outline-white text-white py-3 font-bold text-xl rounded-full flex justify-center items-center active:outline-white active:text-white hover:outline-main-pink hover:text-main-pink duration-300' >
+                <button onClick={(e)=>handleToggle(e)} className=' w-1/2 outline outline-2 outline-white text-white py-3 font-bold md:text-xl rounded-full flex justify-center items-center active:outline-white active:text-white hover:outline-main-pink hover:text-main-pink duration-300' >
                     <AnimatePresence exitBeforeEnter={false} mode="wait">
                         {
                             <motion.div key={currentButton} initial="initial" animate="animate" exit="exit" variants={textVariants} transition={textTransition} >
