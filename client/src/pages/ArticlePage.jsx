@@ -32,7 +32,7 @@ const ArticlePage = () => {
 
 
   return (
-    <div className='relative h-screen w-full flex flex-col items-center'>
+    <div className=' font-br-hendrix relative h-screen w-full flex flex-col items-center'>
       <Navbar/>
       <div className='h-28'></div>
       <AnimatePresence mode='wait'>
