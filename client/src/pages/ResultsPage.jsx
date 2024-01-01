@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import TagRoundedIcon from '@mui/icons-material/TagRounded';
@@ -29,7 +29,7 @@ const ResultsPage = () => {
   
   useEffect(()=>{
     const getArticlesEffect=async()=>{
-      const a=await getArticles()
+      const a = await getArticles()
       setArticles(a)
     }
     getArticlesEffect()
@@ -37,15 +37,28 @@ const ResultsPage = () => {
   [])
   console.log(articles)
 
+  const SkeletonCard=()=>{
+    return(
+      <motion.div initial={{borderRadius:40}} animate={{borderRadius:0}} transition={{duration:1}} className=' items-end md:pl-8 pl-4 pr-2 py-3 font-br-hendrix space-y-2 animate-pulse flex flex-col w-full bg-gradient-to-r from-main-gray to-white'>
+        <div className='h-12 w-full rounded-xl bg-gray-200 pb-4 animate-pulse'></div>
+        <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
+        <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
+        <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
+        <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
+       
+      </motion.div>
+    )
+  }
+
   const ArticleCard=({id,title,keywords,authors,institutions,date})=>{
     return(
-      <div className=' items-end md:pl-8 pl-4 pr-2 py-3 font-br-hendrix flex flex-col w-full bg-gradient-to-r from-main-gray to-white'>
-        <h2 className=' mb-4 font-medium text-left text-2xl hover:underline'>
+      <motion.div initial={{borderRadius:40}} animate={{borderRadius:0}} transition={{duration:1}} className=' items-end md:pl-8 pl-4 pr-2 py-3 font-br-hendrix flex flex-col w-full bg-gradient-to-r from-main-gray to-white'>
+        <h2 className=' mb-4 font-medium text-left text-lg md:text-2xl hover:underline'>
           <Link to={`/article/${id}`}>
             {title}
           </Link>
         </h2>
-        <div className='flex flex-row-reverse items-end space-x-2'>
+        <div className='flex flex-row-reverse md:text-base text-sm items-end space-x-2'>
           <TagRoundedIcon/>
           <div className=' opacity-70 whitespace-nowrap text-ellipsis'>
             {
@@ -55,7 +68,7 @@ const ResultsPage = () => {
             }
           </div>
         </div>
-        <div className='flex flex-row-reverse items-end space-x-2'>
+        <div className='flex flex-row-reverse md:text-base text-sm items-end space-x-2'>
           <PersonRoundedIcon/>
           <div className=' opacity-70 whitespace-nowrap'> 
             {
@@ -65,7 +78,7 @@ const ResultsPage = () => {
             }
           </div>
         </div>
-        <div className='flex flex-row-reverse items-end space-x-2'>
+        <div className='flex flex-row-reverse md:text-base text-sm items-end space-x-2'>
           <BusinessRoundedIcon/>
           <div className=' opacity-70 whitespace-nowrap'>
             {
@@ -75,13 +88,13 @@ const ResultsPage = () => {
             }
           </div>
         </div>
-        <div className='flex flex-row-reverse items-end space-x-2'>
+        <div className='flex flex-row-reverse md:text-base text-sm items-end space-x-2'>
           <CalendarMonthRoundedIcon/>
           <div className=' opacity-70 whitespace-nowrap'>
             {date}
           </div>
         </div>
-      </div>
+      </motion.div>
     )
   }
 
@@ -127,9 +140,10 @@ const ResultsPage = () => {
               </button>
             </div>
           </div>
+          <AnimatePresence mode='wait'>
           {
           showFilter&&
-          <motion.div className='w-full flex flex-col items-center space-y-4'>
+          <motion.div initial={{y:-200}} animate={{y:0}} exit={{y:-500}} className='w-full flex flex-col items-center space-y-4'>
 
             <motion.div className='flex flex-col w-full items-start'>
               <p className=' font-semibold text-secondary-purple mb-2'>Show articles according to</p>
@@ -175,20 +189,24 @@ const ResultsPage = () => {
             </button>
           </motion.div>
           } 
+          </AnimatePresence>
         </motion.div>
         
         <motion.div className='col-span-3 px-2 md:pl-8 pt-8 md:pt-24 w-full h-screen flex flex-col'>
           <div className=' w-[90%] md:w-[60%] rounded-full flex items-center justify-between bg-main-gray space-x-4 px-4 md:px-8'>
-            <input required  name='search' value={search} onChange={(e)=>setSearch(e.target.value)} placeholder='Search' type="text" className=' text-lg py-3 md:py-4 font-medium bg-transparent outline-none flex-1' />
+            <input required  name='search' value={search} onChange={(e)=>setSearch(e.target.value)} placeholder='Search' type="text" className=' md:text-lg text-base py-3 md:py-4 font-medium bg-transparent outline-none flex-1' />
             <SearchIcon style={{color:'#352F44',fontSize:30}}/>
           </div>
           <div>
 
           </div>
           <div className='list flex flex-col space-y-6 px-2 pb-2 mt-2 flex-1 overflow-y-scroll'>
-            {articles&&
+            {articles?
               articles.map((article)=>(
                 <ArticleCard key={article.id} id={article.id} keywords={article.keywords} title={article.title} authors={article.authors} institutions={article.institutions} date={article.date}/>
+              )):
+              [1,2,3,4,5].map(()=>(
+                <SkeletonCard/>
               ))
             }
           </div>

@@ -1,11 +1,12 @@
 import articles from "../constants/articles"
 
 const getArticles=async()=>{
-    setTimeout(()=>{
-    },1000)
-    return(
-        articles
-    )
+    return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(articles);
+        }, 5000);
+      });
+    
 }
 
 export default getArticles
