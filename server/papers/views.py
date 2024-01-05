@@ -66,11 +66,11 @@ def update_document(request):
     if (request.method == 'PUT'):
         req = json.loads(request.body)
         try:
-            document = paper.objects.get(p_id = req.id)
-            del req.id    
+            document = paper.objects.get(p_id = req['id'])
+            del req['id']    
             for key, value in req.items():
-                document[key] = value
-            document.save()
+                setattr(document, key, value)
+            document.save(custom_save = True)
             return JsonResponse({
                 'message':'updated document successfully',
                 'document':'document'

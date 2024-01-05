@@ -40,43 +40,54 @@ class paper(models.Model):
 
 
     def save(self, *args, **kwargs):
-        r = self.__getMetaData()
-        root =  ET.fromstring(r.text)
-        mots_cles = []
-        auteurs = []
-        institutions = []
-        references = []
-        for tag in root.iter():
-            match tag.tag:
-                case "article-title":
-                    self.titre = tag.text
-                case "abstract":
-                    self.resume = tag.find('p').text
-                case "kwd-group":
-                    for t in tag:
-                        mots_cles.append(t.text)
-                case 'contrib':
-                    for t in tag.iter("string-name"):
-                        if(tag.get('contrib-type') == 'author'):
-                            auteurs.append(t.text)
-                        else:
-                            institutions.append(t.text)
-                case _:
-                    continue
-        
-        self.auteurs = auteurs
-        self.mots_cles = mots_cles
-        self.institutions = institutions
-        self.references = references
-        file = ''
-        super(paper, self).save(*args, **kwargs) 
-        with open(self.file_pdf.path, "rb") as f:
-            pdf = pdftotext.PDF(f, physical = True)
-        
-        for text in pdf:
-            file = file + text
-        self.texte_integral = file
-        super(paper, self).save(*args, **kwargs) 
+        if 'custom_save' in kwargs:
+            kwargs.pop('custom_save')
+            super(paper, self).save(*args, **kwargs)
+        else:
+            r = self.__getMetaData()
+            root =  ET.fromstring(r.text)
+            mots_cles = []
+            auteurs = []
+            institutions = []
+            references = []
+            set_titre = False
+            ref_counter = 0
+            for tag in root.iter():
+                match tag.tag:
+                    case "article-title":
+                        if not set_titre:
+                            set_titre = True
+                            self.titre = tag.text
+                    case "abstract":
+                        self.resume = tag.find('p').text
+                    case "kwd-group":
+                        for t in tag:
+                            mots_cles.append(t.text)
+                    case 'contrib':
+                        for t in tag.iter("string-name"):
+                            if(tag.get('contrib-type') == 'author'):
+                                auteurs.append(t.text)
+                            else:
+                                institutions.append(t.text)
+                    case 'institution':
+                        print(tag.text)
+                        institutions.append(tag.text)
+                    case _:
+                        continue
+            
+            self.auteurs = auteurs
+            self.mots_cles = mots_cles
+            self.institutions = institutions
+            self.references = references
+            file = ''
+            super(paper, self).save(*args, **kwargs) 
+            with open(self.file_pdf.path, "rb") as f:
+                pdf = pdftotext.PDF(f, physical = True)
+            
+            for text in pdf:
+                file = file + text
+            self.texte_integral = file
+            super(paper, self).save(*args, **kwargs) 
         
         
     def remove(self):
