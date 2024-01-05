@@ -5,37 +5,37 @@ from .models import paper
 from custom_decorators import permission_required
 import json
 from elasticsearch_dsl import Search
+from django.core.exceptions import ObjectDoesNotExist
 
 
-@permission_required('baseApp.create_paper',"admin",  login_url = "/")
+@permission_required('papers.add_paper',"admin",  login_url = "/")
 def create_document(request):
     if(request.method == 'POST'):
-        file = next(iter(request.FILES.values()))
-        if file is not None:
+        try:
+            file = next(iter(request.FILES.values()))
             document = paper(file_pdf = file)
             document.save() 
             return JsonResponse({
                 'message': 'File uploaded successfully',
                 'paper':document['titre', 'p_id', 'resume', 'auteurs', 'mots_cles']
                 })
-        else:
+        except:
             return JsonResponse({'message': 'File not found'}, status=400)
-    
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
 
 
-@permission_required('baseApp.delete_paper', 'moderator', login_url='/')
+@permission_required('papers.delete_paper', 'moderator', login_url='/')
 def delete_document(request):
     if(request.method == 'DELETE'):
         document_id = json.loads(request.body)['id']
         try:
-            document = paper.objects.get(id = document_id)
+            document = paper.objects.get(p_id = document_id)
             document.delete()
             return JsonResponse({
                 'message':f'removed the document with id ${document_id}'
             })
-        except:
+        except ObjectDoesNotExist:
             return JsonResponse({
                 'message':'couldnt find the document'
             })
@@ -43,17 +43,17 @@ def delete_document(request):
         return JsonResponse({'message': 'Invalid request method'}, status=400)
     
     
-@permission_required('baseApp.view_paper', 'basic user', login_url='/')
+@permission_required('papers.view_paper', 'basic user', login_url='/')
 def get_document(request):
     if (request.method == 'GET'):
         try:
             document_id = request.GET.get("document_id")
-            document = paper.objects.get(id = document_id)
+            document = paper.objects.get(p_id = document_id)
             return JsonResponse({
                 'message':'document found',
-                'document':document
+                'document':document.titre
             })
-        except:
+        except ObjectDoesNotExist:
             return JsonResponse({
                 'message':'couldnt find the document'
             })
@@ -61,12 +61,12 @@ def get_document(request):
         return JsonResponse({'message': 'Invalid request method'}, status=400)
     
 
-@permission_required('baseApp.change_paper', 'moderator', login_url='/')    
+@permission_required('papers.change_paper', 'moderator', login_url='/')    
 def update_document(request):
     if (request.method == 'PUT'):
         req = json.loads(request.body)
         try:
-            document = paper.objects.get(id = req.id)
+            document = paper.objects.get(p_id = req.id)
             del req.id    
             for key, value in req.items():
                 document[key] = value
@@ -75,7 +75,7 @@ def update_document(request):
                 'message':'updated document successfully',
                 'document':'document'
             })
-        except:
+        except ObjectDoesNotExist:
             return JsonResponse({
                 'message':'couldnt find the document'
             })
@@ -90,12 +90,12 @@ def filter_documents(request):
         for key, values in request.GET.lists():
             values = values[0].split(',')
             if len(values) > 1:
-                s = s.query('terms', **{key: values})
+                search = search.query('terms', **{key: values})
             else:
-                s = s.query('match', **{key: values[0]})
+                search = search.query('match', **{key: values[0]})
 
-        response = s.execute().to_dict()["hits"]
-        response = [i["_source"] for i in response]
+        response = search.execute().to_dict()["hits"]
+        response = [i["_source"] for i in response["hits"]]
         return JsonResponse({
             "message":"papers found",
             "documents":response
