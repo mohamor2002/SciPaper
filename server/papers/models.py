@@ -24,7 +24,7 @@ class paper(models.Model):
     institutions = ArrayField(models.CharField(max_length = 100, blank = True, null = True), null = True, default = list, blank = True)
     texte_integral = models.TextField("text integral", blank = True, null = True)
     file_pdf = models.FileField("file pdf", upload_to="uploads/", max_length=40000, blank = True, null = True)
-    references = ArrayField(models.CharField(max_length=50, blank = True, null = True), null = True, default = list, blank = True)
+    references = ArrayField(models.TextField(blank = True, null = True), null = True, default = list, blank = True)
     date_insertion = models.DateTimeField(auto_now_add=True, blank = True, null = True) 
 
     def __str__(self):
@@ -52,6 +52,7 @@ class paper(models.Model):
             references = []
             set_titre = False
             ref_counter = 0
+            ref = ''
             for tag in root.iter():
                 match tag.tag:
                     case "article-title":
@@ -70,8 +71,14 @@ class paper(models.Model):
                             else:
                                 institutions.append(t.text)
                     case 'institution':
-                        print(tag.text)
                         institutions.append(tag.text)
+                    case "ref":
+                        if (ref_counter < 3):
+                            ref_counter += 1
+                            for t in tag.iter():
+                                ref = ref + t.text
+                            references.append(ref)
+                            ref = ''
                     case _:
                         continue
             
