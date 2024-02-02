@@ -17,7 +17,7 @@ import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRound
 
 
 
-const ResultsPage = () => {
+const FavouritesPage = () => {
   const location = useLocation();
   const [articles,setArticles]=useState(null)
   const [showFilter,setShowFilter]=useState(true)
@@ -216,4 +216,4 @@ const ResultsPage = () => {
   )
 }
 
-export default ResultsPage
+export default FavouritesPage

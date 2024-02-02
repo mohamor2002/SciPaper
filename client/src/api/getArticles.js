@@ -1,6 +1,6 @@
 import articles from "../constants/articles"
 
-const getArticles=async()=>{
+const getArticles=async(search,selectedOption,startDate,endDate)=>{
     return new Promise((resolve) => {
         setTimeout(() => {
           resolve(articles);
