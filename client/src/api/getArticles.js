@@ -1,12 +1,9 @@
-import articles from "../constants/articles"
-
-const getArticles=async()=>{
-    return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(articles);
-        }, 2000);
-      });
-    
+// import articles from "../constants/articles"
+import axios from 'axios';
+const getArticles=async(query)=>{
+    let articles = (await axios.get("http://localhost:8000/papers/filterDocuments", query)).data.documents;
+    console.log(articles);
+    return articles;
 }
 
 export default getArticles

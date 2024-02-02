@@ -10,6 +10,10 @@ import os
 
 
 class paper(models.Model):
+    """
+    Stores the url of the uploaded pdf and its metadata ranging from author,title,resume...
+    has a many to many relationship with :model:`authentication.BasicUser`
+    """ 
 
     class Meta:
             default_related_name = "paper"
@@ -30,6 +34,9 @@ class paper(models.Model):
     def __str__(self):
         return self.titre
     def __getMetaData(self):
+        """
+            sends request to cermine api in order to extract metadata from pdf
+        """
         headers = {
         'Content-Type': 'application/binary',
         }
@@ -40,6 +47,10 @@ class paper(models.Model):
 
 
     def save(self, *args, **kwargs):
+        """
+            overwrite the save method in order to allow the autogeneration of scientific metadata based on the uploaded pdf
+        """ 
+
         if 'custom_save' in kwargs:
             kwargs.pop('custom_save')
             super(paper, self).save(*args, **kwargs)

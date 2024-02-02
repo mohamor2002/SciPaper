@@ -76,7 +76,7 @@ const ArticlePage = () => {
               <p className=' font-semibold mx-1'>Keywords:</p>
               <div className=' overflow-hidden whitespace-nowrap text-ellipsis'>
                 {
-                  article.keywords?.map((k,index)=>(
+                  article.keywords.map((k,index)=>(
                     `${k}${index===article.keywords.length-1?'':', '}` 
                   ))
                 }

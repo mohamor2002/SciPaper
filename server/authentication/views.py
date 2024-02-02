@@ -15,31 +15,58 @@ def index(request):
 
 
 def register(request):
+    """
+    let you register a user based on its role.
+
+    **Context**
+
+    ``basic user``
+        An instance of :model:`authentication.BasicUser`.
+    ``moderator``
+        AN instance of :model:`authentication.moderator`
+    ``admin``
+        AN instance of :model:`authentication.admin``
+        
+    **request params**
+        username,password,first_name,last_name,email:string
+        gender: MALE OR FEMALE
+        role: basic user OR admin OR moderator
+    
+    """
     if request.method == 'POST':
-        username, password ,first_name, last_name, email, gender, role = itemgetter('username','password', 'first_name', 'last_name', 'email', 'gender', 'role')(json.loads(request.body))
-        user = authenticate(username = username, password = password)
+        fullname,password, role, email= itemgetter('fullname','password', 'role','email')(json.loads(request.body))
+        user = authenticate(username = fullname, password = password)
         if user is not None:
             return JsonResponse({
                 'message':"Email Already exists"
                 }, status = 401)
         else:
-            user = User.objects.create_user(username = username, email = email, password = password, first_name = first_name, last_name = last_name)
+            first_name = fullname.split()[0]
+            if(len(fullname.split()) > 1):
+                last_name = fullname.split()[1]
+            else:
+                last_name = " "
+            user = User.objects.create_user(username = fullname, email = email, password = password, first_name = first_name, last_name = last_name)
             group = Group.objects.get(name = role)
             user.groups.add(group)
             if role == 'basic user':
-                basic_user = BasicUser(user = user, gender = gender)
+                basic_user = BasicUser(user = user, gender = 'MALE')
                 basic_user.save()
             elif role == 'moderator':
-                mod = moderator(user = user, gender = gender)
+                mod = moderator(user = user, gender = 'MALE')
                 mod.save()
             elif role == 'admin':
-                adm = admin(user = user, gender = gender)
+                adm = admin(user = user, gender = 'MALE')
                 adm.save()
                 djlogin(request, user)
             
             return JsonResponse({
                 'message':"created user successefully",
-                "user name":f'{user.first_name} {user.last_name}'
+                "user":{
+                    "email":email,
+                    "fullname":f'{first_name} {last_name}',
+                    "favourites":[]
+                }
                 })
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
@@ -47,6 +74,11 @@ def register(request):
 
 
 def login(request):
+    """
+        lets you login to your existing account.
+        **request params**
+            username, password:string
+    """
     if request.method == 'POST':
         username, password = itemgetter('username', 'password')(json.loads(request.body))
         user = authenticate(username = username, password = password)
@@ -54,7 +86,11 @@ def login(request):
             djlogin(request, user)
             return JsonResponse({
                 "message":"user logged in successfully",
-                "user name":f'{user.first_name} {user.last_name}'
+                "user":{
+                    "email":user.email,
+                    "fullname":f'{user.first_name} {user.last_name}',
+                    "favourites":[]
+                }
                 })
         else:
             return JsonResponse({
@@ -65,7 +101,10 @@ def login(request):
         
           
 def logout(request):
-    if request.method == 'POST':
+    """
+        lets you end a session
+    """
+    if request.method == 'GET':
         djlogout(request)
         return JsonResponse({
             "message":"logout successfully"
@@ -77,6 +116,9 @@ def logout(request):
 
 @login_required
 def deleteAccount(request):
+    """
+        lets you delete your existing account
+    """
     if request.method == 'DELETE':
         user = request.user
         user.delete()
@@ -88,6 +130,14 @@ def deleteAccount(request):
 @login_required
 @permission_required('authentication.delete_moderator',"admin",  login_url = "/")
 def deleteModerator(request):
+    """
+        lets the admin delete an existing moderator
+        **request params**
+            username:string
+        **context**
+            ``moderator``
+                An instance of :model:`authentication.moderator`
+    """
     if (request.method == 'DELETE'):
           username = itemgetter('username')(json.loads(request.body))
           mod = User.objects.get(username = username)
@@ -101,6 +151,14 @@ def deleteModerator(request):
     
 @login_required
 def add_favourite(request):
+    """
+        lets a basic user add an article to favourites
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'POST'):
         user = request.user.user
         try:

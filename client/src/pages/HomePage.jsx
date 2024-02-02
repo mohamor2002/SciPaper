@@ -116,7 +116,7 @@ const HomePage = () => {
                     </div>
                 }
             </div>
-            <button  type='submit' className={`flex px-2 items-center ${isLoading?'justify-between':'justify-center'} w-1/2 md:w-[33%] mb-2 h-12 md:h-16 bg-dark-purple rounded-full text-white font-bold md:text-xl`}>
+            <button  type='submit' className={`flex px-2 items-center ${isLoading?'justify-between':'justify-center'} w-1/2 md:w-[33%] mb-2 h-12 md:h-16 bg-dark-purple rounded-full text-white font-bold md:text-xl`} onClick={(e)=>isLogin?handleSignIn(dispatch, email, e,password,setIsLoading):handleSignUp(dispatch,e,email,password,fullname,setIsLoading)}>
                 {
                     isLoading&&
                     <span className=' loader h-8 w-8 opacity-0'></span>

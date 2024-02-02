@@ -43,15 +43,17 @@ def delete_document(request):
         return JsonResponse({'message': 'Invalid request method'}, status=400)
     
     
-@permission_required('papers.view_paper', 'basic user', login_url='/')
-def get_document(request):
+# @permission_required('papers.view_paper', 'basic user', login_url='/')
+def get_document(request, id):
     if (request.method == 'GET'):
         try:
-            document_id = request.GET.get("document_id")
-            document = paper.objects.get(p_id = document_id)
+            search = Search(index=paperDocument._index._name)
+            search = search.query('match', **{'id': id})
+            response = search.execute().to_dict()["hits"]
+            response = [i["_source"] for i in response["hits"]]
             return JsonResponse({
                 'message':'document found',
-                'document':document.titre
+                'document':response
             })
         except ObjectDoesNotExist:
             return JsonResponse({

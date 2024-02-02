@@ -39,16 +39,23 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "papers.apps.papersConfig",
     "authentication.apps.AuthenticationConfig",
-    'django_elasticsearch_dsl'
+    "django.contrib.admindocs",
+    'django_elasticsearch_dsl',
+    'corsheaders',
 ]
 
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    "django.middleware.common.CommonMiddleware",
+    
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.admindocs.middleware.XViewMiddleware",
+    
 ]
 
 ROOT_URLCONF = "server.urls"
@@ -135,3 +142,15 @@ ELASTICSEARCH_DSL={
 }
 
 
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITE_LIST = [
+    "http://localhost:5173"
+]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]

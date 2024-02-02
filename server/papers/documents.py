@@ -5,8 +5,8 @@ from .models import paper
 
 @registry.register_document
 class paperDocument(Document):
-    auteurs = fields.ListField(fields.TextField())
-    def prepare_auteurs(self ,instance):
+    authors = fields.ListField(fields.TextField())
+    def prepare_authors(self ,instance):
         a = []
         for i in instance.auteurs:
             a.append(i)
@@ -19,8 +19,8 @@ class paperDocument(Document):
         return a
 
     
-    mots_cles = fields.ListField(fields.TextField())
-    def prepare_mots_cles(self, instance):
+    keywords = fields.ListField(fields.TextField())
+    def prepare_keywords(self, instance):
         a = []
         for i in instance.mots_cles:
             a.append(i)
@@ -33,8 +33,21 @@ class paperDocument(Document):
         for i in instance.institutions:
             a.append(i)
         return a
+    abstract = fields.TextField()
+    def prepare_abstract(self, instance):
+        return instance.resume
     
+    title = fields.TextField()
+    def prepare_title(self, instance):
+        return instance.titre
     
+    id = fields.TextField()
+    def prepare_id(self, instance):
+        return instance.p_id
+    
+    date = fields.DateField()
+    def prepare_date(self,instance):
+        return instance.date_insertion
     class Index:
         # Name of the Elasticsearch index
         name = 'papers'
@@ -47,7 +60,5 @@ class paperDocument(Document):
 
         # The fields of the model you want to be indexed in Elasticsearch
         fields = [
-            'titre',
-            'p_id',
-            'date_insertion'
+         
         ]

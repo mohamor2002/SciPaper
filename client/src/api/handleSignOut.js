@@ -1,10 +1,14 @@
 import { logoutUser } from "../redux/features/userSlice"
+import axios from 'axios';
 
 const handleSignOut=async(e,dispatch)=>{
     e.preventDefault()
-    setTimeout(()=>{
+    try{
+        const url = "http://localhost:8000/logout";
+        console.log(url)
+        await axios.get(url);
         dispatch(logoutUser())
-        window.location.assign('/')
-    },1000)
+    }
+    catch(error){}
 }
 export default handleSignOut

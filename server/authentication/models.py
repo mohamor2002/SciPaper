@@ -4,7 +4,10 @@ from papers.models import paper
 # Create your models here.
 
 class BasicUser(models.Model):
-    
+    """
+    a user with simple privileges that includes:viewing and adding scientific documents to favourites.
+    related by a many to many association to :model:`papers.paper`
+    """ 
     class Meta:
         verbose_name = "user"
         verbose_name_plural = "users"
@@ -23,6 +26,9 @@ class BasicUser(models.Model):
 
     
 class moderator(models.Model):
+    """
+    a user with increased privileges that includes:viewing and modifying scientific documents,
+    """ 
     
     class Meta:
         verbose_name = "moderator"
@@ -41,7 +47,9 @@ class moderator(models.Model):
     
     
 class admin(models.Model):
-    
+    """
+    a user with super privileges that includes:viewing,adding and removing scientific documents, viewing and removing users.
+    """ 
     class Meta:
         verbose_name = "admin"
         verbose_name_plural = "admins"

@@ -7,6 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch, useSelector } from 'react-redux';
 import handleSignOut from '../api/handleSignOut'
 import SearchIcon from '@mui/icons-material/Search';
+import getArticles from "../api/getArticles";
 
 const SearchPage = () => {
   const [search,setSearch]=useState('')
@@ -16,6 +17,7 @@ const SearchPage = () => {
   const handleSearch=(e)=>{
     e.preventDefault()
     window.location.assign(`/search?keywords=${search}`)
+    getArticles({titre:search});
   }
   
 
@@ -38,11 +40,11 @@ const SearchPage = () => {
               <Link to='/profile'>
                 <motion.h4 className='hover:text-main-pink underline text-white font-semibold duration-300'>{user.fullname}</motion.h4>
               </Link>
-              <Link onClick={(e)=>handleSignOut(e,dispatch)} className={`bg-transparent text-white font-semibold outline outline-2 hover:outline-main-pink hover:text-main-pink outline-white px-4 py-2 rounded-full duration-300`}>
+              <button onClick={(e)=>handleSignOut(e,dispatch)} className={`bg-transparent text-white font-semibold outline outline-2 hover:outline-main-pink hover:text-main-pink outline-white px-4 py-2 rounded-full duration-300`}>
                 <p >
                   Logout
                 </p>
-              </Link>
+              </button>
             </div>
           </nav>
           <form onSubmit={handleSearch} className='md:w-[70%] w-[85%] md:space-x-8 z-10 flex-1 flex md:flex-row flex-col items-center justify-center space-y-4 md:space-y-0 md:justify-between'>
