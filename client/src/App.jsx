@@ -7,6 +7,7 @@ import ResultsPage from './pages/ResultsPage'
 import { useSelector } from 'react-redux';
 import ArticlePage from './pages/ArticlePage'
 import ProfilePage from './pages/ProfilePage';
+import FavouritesPage from './pages/FavouritesPage';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path='/search' element={<ResultsPage/>}></Route>
           <Route path='article/:id' element={<ArticlePage/>}></Route>
           <Route path='profile' element={<ProfilePage/>}></Route>
+          <Route path='favourites' element={<FavouritesPage/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
