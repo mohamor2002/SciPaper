@@ -15,8 +15,9 @@ const SearchPage = () => {
   const dispatch=useDispatch()
   const handleSearch=(e)=>{
     e.preventDefault()
-    window.location.assign(`/search?keywords=${search}`)
+    window.location.assign(`/search?keywords=${search}&options=keywords&startDate=&endDate=`)
   }
+  
   
 
   return (
@@ -30,7 +31,7 @@ const SearchPage = () => {
               <p className={`text-white font-bold text-lg md:text-2xl duration-1000`}>SciPaper</p>
             </div>
             <div className='flex items-center space-x-4 mt-4 md:mt-0 md:mr-4'>
-              <Link>
+              <Link to='/favourites'>
               <motion.div initial={{color:'#ffffff'}} whileHover={{scale: 1.2,color:'#F1BBBB'}} whileTap={{ scale: 0.9 }}>
                 <FavoriteIcon style={{fontSize:32}}/>
               </motion.div>

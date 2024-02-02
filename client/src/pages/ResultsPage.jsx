@@ -23,19 +23,22 @@ const ResultsPage = () => {
   const [showFilter,setShowFilter]=useState(true)
   const queryParams = new URLSearchParams(location.search);
   const param1 = queryParams.get('keywords');
+  const param2 = queryParams.get('options');
+  const param3 = queryParams.get('startDate');
+  const param4 = queryParams.get('endDate');
   const [search,setSearch]=useState(param1)
-  const [startDate,setStartDate]=useState('2024-01-01')
-  const [endDate,setEndDate]=useState('2024-01-01')
+  const [startDate,setStartDate]=useState('')
+  const [endDate,setEndDate]=useState('')
   
   useEffect(()=>{
     const getArticlesEffect=async()=>{
-      const a = await getArticles()
+      const a = await getArticles(param1,param2,param3,param4)
       setArticles(a)
     }
     getArticlesEffect()
   },
   [])
-  console.log(articles)
+
 
   const SkeletonCard=()=>{
     return(
@@ -45,14 +48,13 @@ const ResultsPage = () => {
         <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
         <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
         <div className='h-4 w-[60%] rounded-xl bg-gray-200 animate-pulse'></div>
-       
       </motion.div>
     )
   }
 
   const ArticleCard=({id,title,keywords,authors,institutions,date})=>{
     return(
-      <motion.div initial={{borderRadius:40}} animate={{borderRadius:0}} transition={{duration:1}} className=' items-end md:pl-8 pl-4 pr-2 py-3 font-br-hendrix flex flex-col w-full bg-gradient-to-r from-main-gray to-white'>
+      <motion.div dragSnapToOrigin dragConstraints={{ left: 0, right: 300 }} drag initial={{borderRadius:40}} animate={{borderRadius:0}} transition={{duration:1}} className=' items-end md:pl-8 pl-4 pr-2 py-3 font-br-hendrix flex flex-col w-full bg-gradient-to-r from-main-gray to-white'>
         <h2 className=' mb-4 font-medium text-left text-lg md:text-2xl hover:underline'>
           <Link to={`/article/${id}`}>
             {title}
@@ -123,6 +125,11 @@ const ResultsPage = () => {
     setSelectedOption(e.target.value);
   };
 
+  const handleFilter=(e)=>{
+    e.preventDefault()
+    window.location.assign(`/search?keywords=${search}&options=${selectedOption}&startDate=${startDate}&endDate=${endDate}`)
+  }
+
   return (
     <div className=' font-br-hendrix w-full relative h-screen'>
       <Navbar />
@@ -184,7 +191,7 @@ const ResultsPage = () => {
                 </div>
               </div>
             </div>
-            <button className=' w-[50%] py-3 bg-secondary-purple rounded-full font-bold text-white flex items-center justify-center'>
+            <button onClick={handleFilter} className=' w-[50%] py-3 bg-secondary-purple rounded-full font-bold text-white flex items-center justify-center'>
               <p>Filter</p>
             </button>
           </motion.div>
