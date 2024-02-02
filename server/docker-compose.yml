@@ -12,3 +12,9 @@ services:
     ports:
       - "9200:9200"
     mem_limit: "1g"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+
+volumes:
+  elasticsearch_data:

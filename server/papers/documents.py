@@ -11,7 +11,13 @@ class paperDocument(Document):
         for i in instance.auteurs:
             a.append(i)
         return a
-    
+    references = fields.ListField(fields.TextField())
+    def prepare_references(self ,instance):
+        a = []
+        for i in instance.references:
+            a.append(i)
+        return a
+
     
     mots_cles = fields.ListField(fields.TextField())
     def prepare_mots_cles(self, instance):
