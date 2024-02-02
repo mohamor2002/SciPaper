@@ -16,12 +16,8 @@ const SearchPage = () => {
   const dispatch=useDispatch()
   const handleSearch=(e)=>{
     e.preventDefault()
-<<<<<<< HEAD
     window.location.assign(`/search?keywords=${search}`)
     getArticles({titre:search});
-=======
-    window.location.assign(`/search?keywords=${search}&options=keywords&startDate=&endDate=`)
->>>>>>> 818a76359272920dc8c8bda2dd97829f962f46af
   }
   
   
