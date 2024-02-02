@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import ArticlePage from './pages/ArticlePage'
 import ProfilePage from './pages/ProfilePage';
 import FavouritesPage from './pages/FavouritesPage';
+import AdminHomePage from './pages/AdminHomePage'
+import NotFoundPage from './pages/NotFoundPage';
 
 
 function App() {
@@ -23,6 +25,10 @@ function App() {
           <Route path='article/:id' element={<ArticlePage/>}></Route>
           <Route path='profile' element={<ProfilePage/>}></Route>
           <Route path='favourites' element={<FavouritesPage/>}></Route>
+          <Route path='*' element={<NotFoundPage/>}></Route>
+          <Route path='admin'>
+            <Route index element={user?<SearchPage/>:<AdminHomePage/>}></Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </>

@@ -46,7 +46,12 @@ const SearchPage = () => {
               </Link>
             </div>
           </nav>
-          <form onSubmit={handleSearch} className='md:w-[70%] w-[85%] md:space-x-8 z-10 flex-1 flex md:flex-row flex-col items-center justify-center space-y-4 md:space-y-0 md:justify-between'>
+          <div className='text-white font-semibold z-10 text-2xl text-center flex items-center justify-center h-full'>
+            <p>
+            Discover Science Effortlessly with <br /> SciPaper
+            </p>
+          </div>
+          <form onSubmit={handleSearch} className='md:w-[70%] w-[85%] md:space-x-8 z-10 flex-1 flex md:flex-row flex-col items-center justify-center space-y-4 md:space-y-0 md:justify-between md:mb-32 mb-48'>
             <div className=' md:flex-1 w-full md:w-auto bg-white rounded-full flex items-center justify-between space-x-4 px-4 md:px-8'>
                 <input pattern=".*\S+.*" required  name='search' value={search} onChange={(e)=>setSearch(e.target.value)} placeholder='Search' type="text" className=' text-lg py-3 md:py-4 font-medium bg-transparent outline-none flex-1' />
                 <SearchIcon style={{color:'#352F44',fontSize:30}}/>
