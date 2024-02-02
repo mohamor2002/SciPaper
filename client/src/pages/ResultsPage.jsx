@@ -23,18 +23,22 @@ const ResultsPage = () => {
   const [showFilter,setShowFilter]=useState(true)
   const queryParams = new URLSearchParams(location.search);
   const param1 = queryParams.get('keywords');
+  const param2 = queryParams.get('options');
+  const param3 = queryParams.get('startDate');
+  const param4 = queryParams.get('endDate');
   const [search,setSearch]=useState(param1)
   const [startDate,setStartDate]=useState('')
   const [endDate,setEndDate]=useState('')
   
   useEffect(()=>{
     const getArticlesEffect=async()=>{
-      const a = await getArticles(search,selectedOption,startDate,endDate)
+      const a = await getArticles(param1,param2,param3,param4)
       setArticles(a)
     }
     getArticlesEffect()
   },
   [])
+
 
   const SkeletonCard=()=>{
     return(
@@ -121,6 +125,11 @@ const ResultsPage = () => {
     setSelectedOption(e.target.value);
   };
 
+  const handleFilter=(e)=>{
+    e.preventDefault()
+    window.location.assign(`/search?keywords=${search}&options=${selectedOption}&startDate=${startDate}&endDate=${endDate}`)
+  }
+
   return (
     <div className=' font-br-hendrix w-full relative h-screen'>
       <Navbar />
@@ -182,7 +191,7 @@ const ResultsPage = () => {
                 </div>
               </div>
             </div>
-            <button className=' w-[50%] py-3 bg-secondary-purple rounded-full font-bold text-white flex items-center justify-center'>
+            <button onClick={handleFilter} className=' w-[50%] py-3 bg-secondary-purple rounded-full font-bold text-white flex items-center justify-center'>
               <p>Filter</p>
             </button>
           </motion.div>

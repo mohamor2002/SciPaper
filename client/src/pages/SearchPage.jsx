@@ -15,8 +15,9 @@ const SearchPage = () => {
   const dispatch=useDispatch()
   const handleSearch=(e)=>{
     e.preventDefault()
-    window.location.assign(`/search?keywords=${search}`)
+    window.location.assign(`/search?keywords=${search}&options=keywords&startDate=&endDate=`)
   }
+  
   
 
   return (
