@@ -16,8 +16,7 @@ const SearchPage = () => {
   const dispatch=useDispatch()
   const handleSearch=(e)=>{
     e.preventDefault()
-    window.location.assign(`/search?keywords=${search}`)
-    getArticles({titre:search});
+    window.location.assign(`/search?title=${search}`)
   }
   
   

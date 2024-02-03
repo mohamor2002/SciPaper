@@ -11,6 +11,8 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import axios from 'axios';
+import download from 'js-file-download';
 const ArticlePage = () => {
 
   const {id}=useParams()
@@ -27,8 +29,21 @@ const ArticlePage = () => {
   }
 
   
+  const handleDownloadPdf =async(e, id) => {
+    e.preventDefault();
+    let resp = await axios.get(`http://localhost:8000/papers/getPdf/${id}`,  {
+        responseType: "blob",
+      });
+    download(resp.data, "file.pdf");
+  }
 
-
+const handleDownloadText =async(e, id) => {
+    e.preventDefault();
+    let resp = await axios.get(`http://localhost:8000/papers/getText/${id}`,  {
+        responseType: "blob",
+      });
+    download(resp.data, "file.txt");
+  }
 
 
   return (
@@ -141,10 +156,10 @@ const ArticlePage = () => {
         {
           article?
           <div className='flex md:flex-row flex-col md:space-y-0 space-y-4 items-center justify-around w-[90%] md:w-[70%] py-4'>
-            <button className='md:w-[30%] w-[70%] py-2  bg-secondary-purple text-white rounded-full'>
+            <button className='md:w-[30%] w-[70%] py-2  bg-secondary-purple text-white rounded-full' onClick={(e)=>handleDownloadText(e,article.id)}>
               Download txt format
             </button>
-            <button className='md:w-[30%] w-[70%] py-2 bg-secondary-purple text-white rounded-full'>
+            <button className='md:w-[30%] w-[70%] py-2 bg-secondary-purple text-white rounded-full' onClick={(e) => handleDownloadPdf(e, article.id)}>
               Download pdf format
             </button>
           </div>

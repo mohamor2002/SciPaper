@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,FileResponse
 from django.contrib.auth.models import User, Group
 from .documents import paperDocument
 from .models import paper
@@ -89,8 +89,10 @@ def update_document(request):
 def filter_documents(request):
     if(request.method == 'GET'):
         search = Search(index=paperDocument._index._name)
+        print(request.GET.items())
         for key, values in request.GET.lists():
-            values = values[0].split(',')
+            values = values
+            print(key, values)
             if len(values) > 1:
                 search = search.query('terms', **{key: values})
             else:
@@ -107,12 +109,29 @@ def filter_documents(request):
         
         
 
-def get_pdf(request):
+def get_pdf(request, id):
     if(request.method == 'GET'):
-            document_url = request.GET.get('document_url')
+            # document_url = request.GET.get('document_url')
+            papier = paper.objects.get(p_id = id)
+            document_url = papier.file_pdf.path
             with open(document_url, 'rb') as f:
-                response = HttpResponse(f.read(), content_type="application/pdf")
-                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file)
+                # response = HttpResponse(f.read(), content_type="application/pdf")
+                response = HttpResponse(f.read(), content_type='application/pdf')
+                response["Content-Disposition"] = "attachment; filename=file.pdf"
                 return response
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=400) 
+
+
+
+def get_text(request, id):
+    if(request.method == 'GET'):
+            papier = paper.objects.get(p_id = id)
+            text = papier.texte_integral
+                # response = HttpResponse(f.read(), content_type="application/pdf")
+            response = HttpResponse(content_type='text/plain')
+            response["Content-Disposition"] = "attachment; filename=file.txt"
+            response.write(text)
+            return response
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400) 

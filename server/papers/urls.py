@@ -8,5 +8,6 @@ urlpatterns = [
     path("getDocument/<str:id>", views.get_document, name = 'get document'),
     path("updateDocument", views.update_document, name = 'update document'),
     path("filterDocuments", views.filter_documents, name = 'filter documents'),
-    path("getPdf", views.get_pdf, name = 'get pdf')
+    path("getPdf/<str:id>", views.get_pdf, name = 'get pdf'),
+    path("getText/<str:id>", views.get_text, name = 'get text')
 ]

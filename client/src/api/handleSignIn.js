@@ -11,7 +11,7 @@ const handleSignIn=async(dispatch,email,e,password,setIsLoading)=>{
         const url = "http://localhost:8000/login";
         const resp = (await axios.post(url, {username:email, password}))
         const user = resp.data.user;
-        console.log(resp.data.cookieName);
+        console.log(document.cookie);
         // let name = resp.data.cookieName;
         // let value = resp.data.cookieValue;
         // Cookies.set(name, value);

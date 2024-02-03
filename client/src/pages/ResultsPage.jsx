@@ -23,19 +23,20 @@ const ResultsPage = () => {
   const [showFilter,setShowFilter]=useState(true)
   const queryParams = new URLSearchParams(location.search);
   const param1 = queryParams.get('keywords');
-  const param2 = queryParams.get('options');
-  const param3 = queryParams.get('startDate');
-  const param4 = queryParams.get('endDate');
+  const param2 = queryParams.get('authors');
+  const param3 = queryParams.get('institutions');
+  const param4 = queryParams.get('title');
+  // const param4 = queryParams.get('endDate');
   const [search,setSearch]=useState(param1)
   const [startDate,setStartDate]=useState('')
   const [endDate,setEndDate]=useState('')
   
   useEffect(()=>{
     const getArticlesEffect=async()=>{
-      const a = await getArticles(param1,param2,param3,param4)
+      const a = await getArticles({'keywords':param1,'authors':param2,'institutions':param3,'title':param4});
       setArticles(a)
     }
-    getArticlesEffect()
+     getArticlesEffect()
   },
   [])
 
@@ -101,7 +102,6 @@ const ResultsPage = () => {
   }
 
 
-  console.log(startDate)
 
   const RadioInput = ({ label, name, value, checked, onChange }) => {
     return (
@@ -119,15 +119,20 @@ const ResultsPage = () => {
       </div>
     );
   };
-  const [selectedOption, setSelectedOption] = useState('Keywords');
+  const [selectedOption, setSelectedOption] = useState('keywords');
 
   const handleInputChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
-  const handleFilter=(e)=>{
+  const handleFilter=(e, filter_chosen)=>{
     e.preventDefault()
-    window.location.assign(`/search?keywords=${search}&options=${selectedOption}&startDate=${startDate}&endDate=${endDate}`)
+    if(!(search === null)){
+    window.location.assign(`/search?title=${param4}&${filter_chosen}=${search}`)
+    }
+    else{
+     window.location.assign(`/search?title=${param4}`) 
+    }
   }
 
   return (
@@ -158,22 +163,22 @@ const ResultsPage = () => {
                   <RadioInput
                   label="Keywords"
                   name="options"
-                  value="Keywords"
-                  checked={selectedOption === 'Keywords'}
+                  value="keywords"
+                  checked={selectedOption === 'keywords'}
                   onChange={handleInputChange}
                 />
                 <RadioInput
                   label="Authors"
                   name="options"
-                  value="Authors"
-                  checked={selectedOption === 'Authors'}
+                  value="authors"
+                  checked={selectedOption === 'authors'}
                   onChange={handleInputChange}
                 />
                 <RadioInput
                   label="Institutions"
                   name="options"
-                  value="Institutions"
-                  checked={selectedOption === 'Institutions'}
+                  value="institutions"
+                  checked={selectedOption === 'institutions'}
                   onChange={handleInputChange}
                 />
               </div>
@@ -191,7 +196,7 @@ const ResultsPage = () => {
                 </div>
               </div>
             </div>
-            <button onClick={handleFilter} className=' w-[50%] py-3 bg-secondary-purple rounded-full font-bold text-white flex items-center justify-center'>
+            <button onClick={(e) => handleFilter(e, selectedOption)} className=' w-[50%] py-3 bg-secondary-purple rounded-full font-bold text-white flex items-center justify-center'>
               <p>Filter</p>
             </button>
           </motion.div>
