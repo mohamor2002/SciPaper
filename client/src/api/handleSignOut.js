@@ -5,8 +5,7 @@ const handleSignOut=async(e,dispatch)=>{
     e.preventDefault()
     try{
         const url = "http://localhost:8000/logout";
-        console.log(window.sessionStorage)
-        await axios.get(url);
+        await axios.post(url,{}, {withCredentials:true});
         dispatch(logoutUser())
     }
     catch(error){}

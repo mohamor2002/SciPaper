@@ -59,7 +59,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "server.urls"
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -141,11 +140,11 @@ ELASTICSEARCH_DSL={
     }
 }
 
-
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITE_LIST = [
-    "http://localhost:5173"
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
 ]
+CORS_ALLOW_ALL_ORIGINS = False
+
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -153,4 +152,17 @@ CORS_ALLOW_METHODS = [
     "PATCH",
     "POST",
     "PUT",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'authorization',
+'content-type',
+'dnt',
+'origin',
+'user-agent',
+'x-csrftoken',
+'x-requested-with',
 ]

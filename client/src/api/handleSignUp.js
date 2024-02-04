@@ -9,7 +9,7 @@ const handleSignUp=async(dispatch,e,email,password,fullname,setIsLoading)=>{
     try{
         const url = "http://localhost:8000/register";
         console.log(url);
-        const user = (await axios.post(url, {fullname,email, password, role:"basic user"})).data.user;
+        const user = (await axios.post(url, {fullname,email, password, role:"basic user"}, {withCredentials:true})).data.user;
         console.log(user);
         dispatch(loginUser(user));
         } catch (error) {

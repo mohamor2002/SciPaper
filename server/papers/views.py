@@ -89,15 +89,14 @@ def update_document(request):
 def filter_documents(request):
     if(request.method == 'GET'):
         search = Search(index=paperDocument._index._name)
-        print(request.GET.items())
         for key, values in request.GET.lists():
+            key = key.rstrip('[]')
+            print(key)
             values = values
-            print(key, values)
             if len(values) > 1:
                 search = search.query('terms', **{key: values})
             else:
                 search = search.query('match', **{key: values[0]})
-
         response = search.execute().to_dict()["hits"]
         response = [i["_source"] for i in response["hits"]]
         return JsonResponse({

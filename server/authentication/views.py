@@ -84,12 +84,16 @@ def login(request):
         user = authenticate(username = username, password = password)
         if user is not None :
             djlogin(request, user)
+            favourites = user.basicuser.favorites.all()
+            articles = []
+            for i in favourites:
+                articles.append(i.p_id)
             return JsonResponse({
                 "message":"user logged in successfully",
                 "user":{
                     "email":user.email,
                     "fullname":f'{user.first_name} {user.last_name}',
-                    "favourites":[]
+                    "favourites":articles
                 }
                 })
         else:
@@ -104,10 +108,11 @@ def logout(request):
     """
         lets you end a session
     """
-    if request.method == 'GET':
+    if request.method == 'POST':
+
         djlogout(request)
         return JsonResponse({
-            "message":"logout successfully"
+            "message":"logout successfully",
             })
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=400)
@@ -160,12 +165,39 @@ def add_favourite(request):
             paper_id:string
     """
     if(request.method == 'POST'):
-        user = request.user.user
+        user = request.user.basicuser
         try:
-            article = paper.objects.get(p_id = json.loads(request.body).id)
+            article = paper.objects.get(p_id = json.loads(request.body)['id'])
             user.favorites.add(article)
+            user.save()
             return JsonResponse({
                 "message":"added paper to favorites"
+            })
+        except:
+            return JsonResponse({
+                "message":"couldnt find the paper"
+            })
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=400)
+
+        
+def remove_favourite(request):
+    """
+        lets a basic user add an article to favourites
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
+    if(request.method == 'POST'):
+        user = request.user.basicuser
+        try:
+            article = paper.objects.get(p_id = json.loads(request.body)['id'])
+            user.favorites.remove(article)
+            user.save()
+            return JsonResponse({
+                "message":"removed paper from favorites"
             })
         except:
             return JsonResponse({
