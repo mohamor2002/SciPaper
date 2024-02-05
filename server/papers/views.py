@@ -10,6 +10,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 @permission_required('papers.add_paper',"admin",  login_url = "/")
 def create_document(request):
+    """
+        lets an admin upload an article
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+    """
     if(request.method == 'POST'):
         try:
             file = next(iter(request.FILES.values()))
@@ -27,6 +33,14 @@ def create_document(request):
 
 @permission_required('papers.delete_paper', 'moderator', login_url='/')
 def delete_document(request):
+    """
+        lets an admin or a moderator delete an article
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'DELETE'):
         document_id = json.loads(request.body)['id']
         try:
@@ -45,6 +59,14 @@ def delete_document(request):
     
 # @permission_required('papers.view_paper', 'basic user', login_url='/')
 def get_documents(request):
+    """
+        lets a basic user get an articles based on id
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string[]
+    """
     if (request.method == 'GET'):
         try:
             ids = request.GET.getlist('id[]')
@@ -70,6 +92,16 @@ def get_documents(request):
 
 @permission_required('papers.change_paper', 'moderator', login_url='/')    
 def update_document(request):
+    """
+        lets a moderator correct an article information
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+        **request body**
+            key(string):value(string)
+    """
     if (request.method == 'PUT'):
         req = json.loads(request.body)
         try:
@@ -92,6 +124,14 @@ def update_document(request):
     
 
 def filter_documents(request):
+    """
+        lets a basic user get array of articles based on a filter
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            query:string
+    """
     if(request.method == 'GET'):
         search = Search(index=paperDocument._index._name)
         for key, values in request.GET.lists():
@@ -114,6 +154,14 @@ def filter_documents(request):
         
 
 def get_pdf(request, id):
+    """
+        lets a basic user download an article pdf
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'GET'):
             # document_url = request.GET.get('document_url')
             papier = paper.objects.get(p_id = id)
@@ -129,6 +177,14 @@ def get_pdf(request, id):
 
 
 def get_text(request, id):
+    """
+        lets a basic user download an article text
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'GET'):
             papier = paper.objects.get(p_id = id)
             text = papier.texte_integral
