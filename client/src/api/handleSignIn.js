@@ -3,6 +3,16 @@ import { loginUser } from "../redux/features/userSlice"
 import axios from 'axios'
 import Cookies from 'js-cookie';
 
+
+
+/**
+ * sign in a user
+ * @param {*} dispatch 
+ * @param {string} email 
+ * @param {React.MouseEvent} e 
+ * @param {string} password 
+ * @param {string} setIsLoading 
+ */
 const handleSignIn=async(dispatch,email,e,password,setIsLoading)=>{
     e.preventDefault();
     console.log("fff")
