@@ -44,16 +44,21 @@ def delete_document(request):
     
     
 # @permission_required('papers.view_paper', 'basic user', login_url='/')
-def get_document(request, id):
+def get_documents(request):
     if (request.method == 'GET'):
         try:
-            search = Search(index=paperDocument._index._name)
-            search = search.query('match', **{'id': id})
-            response = search.execute().to_dict()["hits"]
-            response = [i["_source"] for i in response["hits"]]
+            ids = request.GET.getlist('id[]')
+            print(ids)
+            articles = []
+            for i in ids:
+                search = Search(index=paperDocument._index._name)
+                search = search.query('match', **{'id': i})
+                response = search.execute().to_dict()["hits"]
+                response = [i["_source"] for i in response["hits"]]
+                articles.append(response[0])
             return JsonResponse({
                 'message':'document found',
-                'document':response
+                'documents':articles
             })
         except ObjectDoesNotExist:
             return JsonResponse({
@@ -92,9 +97,9 @@ def filter_documents(request):
         for key, values in request.GET.lists():
             key = key.rstrip('[]')
             print(key)
-            values = values
+            print(values)
             if len(values) > 1:
-                search = search.query('terms', **{key: values})
+                search = search.query('terms', **{key:values})
             else:
                 search = search.query('match', **{key: values[0]})
         response = search.execute().to_dict()["hits"]

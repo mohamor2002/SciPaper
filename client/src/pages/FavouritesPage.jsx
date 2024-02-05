@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 // import articles from '../constants/articles';
 import getArticles from '../api/getArticles';
+import axios from 'axios'
 
 
 
@@ -32,10 +33,11 @@ const FavouritesPage = () => {
   populateDocuments(user);*/
   useEffect(()=>{
     const getArticlesEffect=async()=>{
-      const a = await getArticles({'id':user.favourites});
+      console.log(555);
+      const a = (await axios.get("http://localhost:8000/papers/getDocuments", {params:{'id':user.favourites}})).data.documents;
       setArticles(a)
+      
       setLoading(false);
-      console.log(a)
     }
      getArticlesEffect()
   },
@@ -118,7 +120,7 @@ const FavouritesPage = () => {
           <div>
           </div>
           <div className='list flex flex-col space-y-6 px-2 pb-2 mt-2 flex-1 overflow-y-scroll'>
-            {!loading?
+            {!(loading || (articles === null))?
               articles.map((article)=>(
                 <ArticleCard key={article.id} id={article.id} keywords={article.keywords} title={article.title} authors={article.authors} institutions={article.institutions} date={article.date}/>
               )):

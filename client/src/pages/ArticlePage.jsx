@@ -16,18 +16,24 @@ import download from 'js-file-download';
 import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux"
 import { loginUser } from "../redux/features/userSlice"
+import { logoutUser } from '../redux/features/userSlice';
 
 
 const ArticlePage = () => {
+  const dispatch = useDispatch();
 const user =useSelector(state=>state.data.user.user)
 const {id}=useParams()
 const [article,setArticle]=useState(null)
 const [isFavourite,setIsFavourite]=useState(false);
+
   useEffect(()=>{
-    getArticleById(id,setArticle,setIsFavourite);
+    async function ftch() { await getArticleById(id,setArticle,setIsFavourite);
+    
     const b = user.favourites.includes(id);
     setIsFavourite(b);
-  },[])
+    }
+    ftch()
+  },[id, user])
   
   const handlePrevious=(e)=>{
     e.preventDefault()
@@ -52,26 +58,48 @@ const handleDownloadText =async(e, id) => {
   }
 
   const handlefavourite = async(e, id)=>{
+    
+    console.log(isFavourite);
     if (isFavourite){
+      
       await setFavourite(e, id, 'remove');
       setIsFavourite(false)
       let f = new Set(user.favourites)
-      f.remove(id)
-      user.favourites = Array.from(f)
+      f.delete(id);
+      let u = {
+        "fullname":'',
+        'email':'',
+        'favourites':[]
+      };
+      u['fullname'] = user.fullname;
+      u['email'] = user.email;
+      u['favourites'] = Array.from(f);
+      console.log(u)
+      dispatch(logoutUser());
+      dispatch(loginUser(u));
     }
     else{
       await setFavourite(e, id, 'add');
       setIsFavourite(true);
       let f = new Set(user.favourites)
       f.add(id)
-      user.favourites = Array.from(f)
+      let u = {
+        "fullname":'',
+        'email':'',
+        'favourites':[]
+      };;
+      u['fullname'] = user.fullname;
+      u['email'] = user.email;
+      u['favourites'] = Array.from(f);
+      console.log(u)
+      dispatch(logoutUser());
+      dispatch(loginUser(u))
     }
-   dispatch(loginUser(user));
 
 
+
     }
-    
-   console.log(isFavourite)
+ console.log(isFavourite)   
   return (
     <div className=' font-br-hendrix relative h-screen w-full flex flex-col items-center'>
       <Navbar/>

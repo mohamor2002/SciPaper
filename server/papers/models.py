@@ -20,12 +20,12 @@ class paper(models.Model):
             get_latest_by = "date_insertion"
             verbose_name = "paper"
             verbose_name_plural = "papers"
-    titre = models.CharField("titre", max_length=100, blank = True, null = True)
+    titre = models.CharField("titre", max_length=50000, blank = True, null = True)
     p_id = models.UUIDField(primary_key=True, default=uuid, editable=False)
     resume = models.TextField("resume", blank = True)
-    auteurs = ArrayField(models.CharField(max_length=100, blank = True, null = True), null = True, default = list, blank = True)
-    mots_cles = ArrayField(models.CharField(max_length=100, blank = True, null = True), null = True, default = list, blank = True)
-    institutions = ArrayField(models.CharField(max_length = 100, blank = True, null = True), null = True, default = list, blank = True)
+    auteurs = ArrayField(models.CharField(max_length=5000, blank = True, null = True), null = True, default = list, blank = True)
+    mots_cles = ArrayField(models.CharField(max_length=5000, blank = True, null = True), null = True, default = list, blank = True)
+    institutions = ArrayField(models.CharField(max_length = 5000, blank = True, null = True), null = True, default = list, blank = True)
     texte_integral = models.TextField("text integral", blank = True, null = True)
     file_pdf = models.FileField("file pdf", upload_to="uploads/", max_length=40000, blank = True, null = True)
     references = ArrayField(models.TextField(blank = True, null = True), null = True, default = list, blank = True)

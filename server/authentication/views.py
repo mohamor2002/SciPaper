@@ -35,7 +35,7 @@ def register(request):
     """
     if request.method == 'POST':
         fullname,password, role, email= itemgetter('fullname','password', 'role','email')(json.loads(request.body))
-        user = authenticate(username = fullname, password = password)
+        user = authenticate(username = email, password = password)
         if user is not None:
             return JsonResponse({
                 'message':"Email Already exists"
@@ -46,14 +46,14 @@ def register(request):
                 last_name = fullname.split()[1]
             else:
                 last_name = " "
-            user = User.objects.create_user(username = fullname, email = email, password = password, first_name = first_name, last_name = last_name)
+            user = User.objects.create_user(username = email, email = email, password = password, first_name = first_name, last_name = last_name)
             group = Group.objects.get(name = role)
             user.groups.add(group)
             if role == 'basic user':
-                basic_user = BasicUser(user = user, gender = 'MALE')
+                basic_user = BasicUser(user = user)
                 basic_user.save()
             elif role == 'moderator':
-                mod = moderator(user = user, gender = 'MALE')
+                mod = moderator(user = user)
                 mod.save()
             elif role == 'admin':
                 adm = admin(user = user, gender = 'MALE')
@@ -88,6 +88,7 @@ def login(request):
             articles = []
             for i in favourites:
                 articles.append(i.p_id)
+            print(articles)
             return JsonResponse({
                 "message":"user logged in successfully",
                 "user":{
