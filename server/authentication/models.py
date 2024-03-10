@@ -12,12 +12,8 @@ class BasicUser(models.Model):
         verbose_name = "user"
         verbose_name_plural = "users"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    choices = [
-        ("MALE", "MALE"),
-        ("FEMALE", "FEMALE")
-    ]
-    gender = models.CharField(max_length=50, choices=choices)
-    favorites = models.ManyToManyField(paper, blank = True)
+    
+    favorites = models.ManyToManyField(paper, blank=True, null=True)
     
     
     def __str__(self):
@@ -34,11 +30,6 @@ class moderator(models.Model):
         verbose_name = "moderator"
         verbose_name_plural = "moderators"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    choices = [
-        ("MALE", "MALE"),
-        ("FEMALE", "FEMALE")
-    ]
-    gender = models.CharField(max_length=50, choices=choices)
     
     
     def __str__(self):
@@ -54,11 +45,6 @@ class admin(models.Model):
         verbose_name = "admin"
         verbose_name_plural = "admins"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    choices = [
-        ("MALE", "MALE"),
-        ("FEMALE", "FEMALE")
-    ]
-    gender = models.CharField(max_length=50, choices=choices)
     
     
     def __str__(self):

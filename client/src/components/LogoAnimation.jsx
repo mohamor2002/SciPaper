@@ -1,6 +1,11 @@
 import React from 'react';
 import { AnimatePresence, color, motion } from 'framer-motion';
 
+/**
+ * 
+ * @param {string[]} colors array of colors used for the logo 
+ * @returns {SVGAElement}
+ */
 const LogoAnimation = ({colors}) => {
   
   

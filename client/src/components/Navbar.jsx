@@ -8,6 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 
+
+
+/**
+ * returns the navbar component used at all the pages
+ * @param {string} search the search query
+ * @param {function} setSearch used to set the value of search
+ * @returns {ReactNode}
+ */
 const Navbar = ({search,setSearch}) => {
     const user =useSelector(state=>state.data.user.user)
     const colorsWhite=['#ffffff','#ffffff','#BDBDBD','#ffffff','#ffffff']

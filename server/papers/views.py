@@ -10,6 +10,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 @permission_required('papers.add_paper',"admin",  login_url = "/")
 def create_document(request):
+    """
+        lets an admin upload an article
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+    """
     if(request.method == 'POST'):
         try:
             file = next(iter(request.FILES.values()))
@@ -27,6 +33,14 @@ def create_document(request):
 
 @permission_required('papers.delete_paper', 'moderator', login_url='/')
 def delete_document(request):
+    """
+        lets an admin or a moderator delete an article
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'DELETE'):
         document_id = json.loads(request.body)['id']
         try:
@@ -44,16 +58,29 @@ def delete_document(request):
     
     
 # @permission_required('papers.view_paper', 'basic user', login_url='/')
-def get_document(request, id):
+def get_documents(request):
+    """
+        lets a basic user get an articles based on id
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string[]
+    """
     if (request.method == 'GET'):
         try:
-            search = Search(index=paperDocument._index._name)
-            search = search.query('match', **{'id': id})
-            response = search.execute().to_dict()["hits"]
-            response = [i["_source"] for i in response["hits"]]
+            ids = request.GET.getlist('id[]')
+            print(ids)
+            articles = []
+            for i in ids:
+                search = Search(index=paperDocument._index._name)
+                search = search.query('match', **{'id': i})
+                response = search.execute().to_dict()["hits"]
+                response = [i["_source"] for i in response["hits"]]
+                articles.append(response[0])
             return JsonResponse({
                 'message':'document found',
-                'document':response
+                'documents':articles
             })
         except ObjectDoesNotExist:
             return JsonResponse({
@@ -65,6 +92,16 @@ def get_document(request, id):
 
 @permission_required('papers.change_paper', 'moderator', login_url='/')    
 def update_document(request):
+    """
+        lets a moderator correct an article information
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+        **request body**
+            key(string):value(string)
+    """
     if (request.method == 'PUT'):
         req = json.loads(request.body)
         try:
@@ -87,17 +124,24 @@ def update_document(request):
     
 
 def filter_documents(request):
+    """
+        lets a basic user get array of articles based on a filter
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            query:string
+    """
     if(request.method == 'GET'):
         search = Search(index=paperDocument._index._name)
-        print(request.GET.items())
         for key, values in request.GET.lists():
-            values = values
-            print(key, values)
+            key = key.rstrip('[]')
+            print(key)
+            print(values)
             if len(values) > 1:
-                search = search.query('terms', **{key: values})
+                search = search.query('terms', **{key:values})
             else:
                 search = search.query('match', **{key: values[0]})
-
         response = search.execute().to_dict()["hits"]
         response = [i["_source"] for i in response["hits"]]
         return JsonResponse({
@@ -110,6 +154,14 @@ def filter_documents(request):
         
 
 def get_pdf(request, id):
+    """
+        lets a basic user download an article pdf
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'GET'):
             # document_url = request.GET.get('document_url')
             papier = paper.objects.get(p_id = id)
@@ -125,6 +177,14 @@ def get_pdf(request, id):
 
 
 def get_text(request, id):
+    """
+        lets a basic user download an article text
+        **context**
+            ``paper``
+                An instance of :model:`papers.paper`
+        **request params**
+            paper_id:string
+    """
     if(request.method == 'GET'):
             papier = paper.objects.get(p_id = id)
             text = papier.texte_integral

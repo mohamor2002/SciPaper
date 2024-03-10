@@ -13,15 +13,27 @@ import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import axios from 'axios';
 import download from 'js-file-download';
-const ArticlePage = () => {
+import { useSelector } from 'react-redux';
+import { useDispatch } from "react-redux"
+import { loginUser } from "../redux/features/userSlice"
+import { logoutUser } from '../redux/features/userSlice';
 
-  const {id}=useParams()
-  console.log(id)
-  const [article,setArticle]=useState(null)
-  const [isFavourite,setIsFavourite]=useState(false)
+
+const ArticlePage = () => {
+  const dispatch = useDispatch();
+const user =useSelector(state=>state.data.user.user)
+const {id}=useParams()
+const [article,setArticle]=useState(null)
+const [isFavourite,setIsFavourite]=useState(false);
+
   useEffect(()=>{
-    getArticleById(id,setArticle,setIsFavourite)
-  },[])
+    async function ftch() { await getArticleById(id,setArticle,setIsFavourite);
+    
+    const b = user.favourites.includes(id);
+    setIsFavourite(b);
+    }
+    ftch()
+  },[id, user])
   
   const handlePrevious=(e)=>{
     e.preventDefault()
@@ -45,7 +57,49 @@ const handleDownloadText =async(e, id) => {
     download(resp.data, "file.txt");
   }
 
+  const handlefavourite = async(e, id)=>{
+    
+    console.log(isFavourite);
+    if (isFavourite){
+      
+      await setFavourite(e, id, 'remove');
+      setIsFavourite(false)
+      let f = new Set(user.favourites)
+      f.delete(id);
+      let u = {
+        "fullname":'',
+        'email':'',
+        'favourites':[]
+      };
+      u['fullname'] = user.fullname;
+      u['email'] = user.email;
+      u['favourites'] = Array.from(f);
+      console.log(u)
+      dispatch(logoutUser());
+      dispatch(loginUser(u));
+    }
+    else{
+      await setFavourite(e, id, 'add');
+      setIsFavourite(true);
+      let f = new Set(user.favourites)
+      f.add(id)
+      let u = {
+        "fullname":'',
+        'email':'',
+        'favourites':[]
+      };;
+      u['fullname'] = user.fullname;
+      u['email'] = user.email;
+      u['favourites'] = Array.from(f);
+      console.log(u)
+      dispatch(logoutUser());
+      dispatch(loginUser(u))
+    }
 
+
+
+    }
+ console.log(isFavourite)   
   return (
     <div className=' font-br-hendrix relative h-screen w-full flex flex-col items-center'>
       <Navbar/>
@@ -59,15 +113,17 @@ const handleDownloadText =async(e, id) => {
           </button>
           {
           article?
-          <button onClick={(e)=>setFavourite(e,setIsFavourite)} className=' space-x-2 flex text-white'>
+          <button onClick={(e) => handlefavourite(e, id)} className=' space-x-2 flex text-white'>
             {
-              !isFavourite?
+              isFavourite?
+              
               <FavoriteIcon/>:
               <FavoriteBorderIcon/>
-
+              
             }
             <p className=' text-sm md:text-base'>{
-            isFavourite?'Add to favourites':'Remove from favourites'
+              
+            isFavourite?'Remove from favourites':'Add to favourites'
             }</p>
           </button>:
           <div></div>

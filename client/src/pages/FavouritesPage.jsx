@@ -9,12 +9,12 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import { Link } from 'react-router-dom';
-import getArticles from '../api/getArticles';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
-import articles from '../constants/articles';
-
+// import articles from '../constants/articles';
+import getArticles from '../api/getArticles';
+import axios from 'axios'
 
 
 
@@ -23,8 +23,26 @@ import articles from '../constants/articles';
 
 const FavouritesPage = () => {
   const user =useSelector(state=>state.data.user.user)
-
-  
+  const [loading, setLoading] = useState(true);
+  const [articles,setArticles]=useState(null)
+  /*const populateDocuments = async(user)=>{
+    const favourites = user.favourites
+    console.log(favourites);
+    articles = await getArticles({'id': favourites,}); 
+  }
+  populateDocuments(user);*/
+  useEffect(()=>{
+    const getArticlesEffect=async()=>{
+      console.log(555);
+      const a = (await axios.get("http://localhost:8000/papers/getDocuments", {params:{'id':user.favourites}})).data.documents;
+      setArticles(a)
+      
+      setLoading(false);
+    }
+     getArticlesEffect()
+  },
+  [])
+  // console.log(articles);
 
   const SkeletonCard=()=>{
     return(
@@ -102,7 +120,7 @@ const FavouritesPage = () => {
           <div>
           </div>
           <div className='list flex flex-col space-y-6 px-2 pb-2 mt-2 flex-1 overflow-y-scroll'>
-            {articles?
+            {!(loading || (articles === null))?
               articles.map((article)=>(
                 <ArticleCard key={article.id} id={article.id} keywords={article.keywords} title={article.title} authors={article.authors} institutions={article.institutions} date={article.date}/>
               )):

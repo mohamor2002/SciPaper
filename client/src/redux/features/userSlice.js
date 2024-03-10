@@ -8,6 +8,11 @@ const initialState = {
   user: loadUserFromLocalStorage(),
 };
 
+/**
+ * this function is used to store the user state on the browser
+ * @function loginUser used for storing the user information
+ * @function logoutUser used for deleting the user information
+ */
 export const userSlice = createSlice({
   name: "user",
   initialState,
