@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField   
 import requests
 from xml.etree import ElementTree as ET
-import pdftotext
 from uuid import uuid4 as uuid
 import os
 # Create your models here.

@@ -1,5 +1,6 @@
 
 from django.http import JsonResponse
+from django.http import HttpResponse
 from .models import BasicUser, moderator, admin
 from papers.models import paper
 from django.contrib.auth.models import User, Group
@@ -8,6 +9,7 @@ from operator import itemgetter
 import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from custom_decorators import permission_required
+
 # Create your views here.
 def index(request):
     return HttpResponse("hello world")
@@ -34,6 +36,7 @@ def register(request):
     
     """
     if request.method == 'POST':
+        print('here')
         fullname,password, role, email= itemgetter('fullname','password', 'role','email')(json.loads(request.body))
         user = authenticate(username = fullname, password = password)
         if user is not None:
